@@ -1,0 +1,70 @@
+---
+title: "lab11"
+author: "Hao Zeng"
+date: "November 24, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+```{r}
+binom_gen <- function(b,n,p){
+  x = NULL
+  binom_value = NULL
+  for (i in 1:b) {
+    x = runif(n, min = 0, max = 1)
+    binom_value[i] = sum(as.numeric(x < p))
+  }
+  return(binom_value)
+}
+
+```
+
+# Quesion 2
+```{r}
+library(microbenchmark)
+microbenchmark(binom_gen(20,10,0.5), rbinom(20,10,0.5))
+```
+
+# Question 3
+```{r}
+set.seed(123)
+beta0 <- 15
+beta1 <- 0.4
+eps <- rnorm(50,0,3)
+x <- runif(50,20,40)
+y <- beta0 + beta1 * x + eps
+
+fit0 <- lm(y ~ x)
+
+library(ggplot2)
+
+ggplot(data = fit0, aes(x = fit0$fitted.values, y = fit0$residuals)) +
+  geom_point() +
+  labs(x =  'fitted values', y = 'residuals')
+```
+
+# Question 4
+```{r}
+n <- 10000
+u1 <- runif(n, 0, 1)
+u2 <- runif(n, 0, 1)
+r <- sqrt(-2 * log(u1))
+theta <- 2 * pi * u2
+x <- r * sin(theta)
+y <- r * cos(theta)
+
+bi <- rnorm(n, 0, 1)
+
+ggplot() +
+  geom_histogram(aes(x), bins = 30, fill = 'pink') + 
+  geom_histogram(aes(y), bins = 30, col = 2, fill = NA) +
+  geom_freqpoly(aes(bi),bins = 30, lwd = 2, col = 'lemonchiffon') +
+  labs(x = 'simulated data')
+
+
+```
+
